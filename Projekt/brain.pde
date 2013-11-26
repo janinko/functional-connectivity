@@ -12,7 +12,7 @@ class BrainPart {
     analyzeMask(mask);
     submask = new boolean[ex - sx][ey - sy][ez - sz];
     fillSubmask(mask);
-    pos = repreNodes.get(partId);
+    pos = repreNodes.get(partId-1);
   }
 
   private void analyzeMask(Mask mask){
@@ -46,13 +46,14 @@ class BrainPart {
     for(int x=sx; x < ex; x++){
       for(int y=sy; y < ey; y++){
         for(int z=sz; z < ez; z++){
-          submask[x][y][z] = mask.get(x,y,z) == partId;
+          submask[x-sx][y-sy][z-sz] = mask.get(x,y,z) == partId;
         }
       }
     }
   }
 
-  draw(){
+  void draw(){
+    print("drawing part " + partId + "( " + sx + " - " + ex + ", " + sy + " - " + ey + ", "+ sz + " - " + ez + " ) ...");
     pushMatrix();
     translate(sy -1, sx -1, sz -1);
     for(int x=sx; x < ex; x++){
@@ -61,7 +62,7 @@ class BrainPart {
         translate(0, 1, 0);
         for(int z=sz; z < ez; z++){
           translate(0, 0, -1);
-          if(submask[x][y][z]){
+          if(submask[x-sx][y-sy][z-sz]){
             fill(partId, 90, 90, 30);
             box(1);
           }
@@ -71,5 +72,6 @@ class BrainPart {
       translate(0, sy-ey, 0);
     }
     popMatrix();
+    println(" OK");
   }
 }

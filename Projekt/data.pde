@@ -1,7 +1,5 @@
 import java.util.*;
 
-String dataPath = "/home/xbrazdi1/PA055/Projekt/data/";
-
 class Mask{
   String filePath = dataPath + "mask.h5"; 
   String objectPath = "results/aal/to_processing/aal_atlas";
@@ -11,6 +9,7 @@ class Mask{
     
   
   Mask(){
+    println(filePath);
     IHDF5Reader r = HDF5Factory.openForReading(filePath);
     
     data = r.float32().readMDArray(objectPath);
@@ -29,8 +28,8 @@ class Mask{
 }
 
 class Position{
-  int x, y, z;
-  Position(int x, int y, int z){
+  float x, y, z;
+  Position(float x, float y, float z){
     this.x = x;
     this.y = y;
     this.z = z;

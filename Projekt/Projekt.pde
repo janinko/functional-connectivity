@@ -1,5 +1,6 @@
 import java.util.*;
 
+String dataPath = "/home/jbrazdil/Programování/functional-connectivity/Projekt/data/";
 int barWidth = 20;
 int lastBar = -1;
 
@@ -15,8 +16,8 @@ void setup()
   noStroke();
   background(0);
 
-  for(int i=0; i<90; i++){
-    parts.add(new BrainPart(i, mask, rn));
+  for(int i=1; i<=90; i++){
+    parts.add(new BrainPart(i, m, rn));
   }
 }
 
