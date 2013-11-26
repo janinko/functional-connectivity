@@ -53,25 +53,35 @@ class BrainPart {
   }
 
   void draw(){
-    print("drawing part " + partId + "( " + sx + " - " + ex + ", " + sy + " - " + ey + ", "+ sz + " - " + ez + " ) ...");
+    //print("drawing part " + partId + "( " + sx + " - " + ex + ", " + sy + " - " + ey + ", "+ sz + " - " + ez + " ) ...");
     pushMatrix();
-    translate(sy -1, sx -1, sz -1);
-    for(int x=sx; x < ex; x++){
-      translate(1, 0, 0);
-      for(int y=sy; y < ey; y++){
-        translate(0, 1, 0);
-        for(int z=sz; z < ez; z++){
-          translate(0, 0, -1);
+    int count = 0;
+    translate(pos.y, -pos.x, -pos.z);
+    fill(partId, 90, 90);
+    sphere(3);
+    translate(-pos.y, pos.x, pos.z);
+    translate(sy -1, -sx +1, -sz +1);
+    for(int x=sx; x < ex; x+=2){
+      translate(0, -2, 0);
+      int cy = 0;
+      for(int y=sy; y < ey; y+=2){
+        cy++;
+        translate(2, 0, 0);
+        int cz = 0;
+        for(int z=sz; z < ez; z+=2){
+          cz++;
+          translate(0, 0, -2);
           if(submask[x-sx][y-sy][z-sz]){
-            fill(partId, 90, 90, 30);
-            box(1);
+            fill(partId, 50, 50, 10);
+            box(2);
+            count++;
           }
         }
-        translate(0, 0, ez-sz);
+        translate(0, 0, cz*2);
       }
-      translate(0, sy-ey, 0);
+      translate(-cy*2, 0, 0);
     }
     popMatrix();
-    println(" OK");
+    //println(" OK");
   }
 }

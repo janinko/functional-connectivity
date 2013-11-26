@@ -1,8 +1,8 @@
 import java.util.*;
 
 class Mask{
-  String filePath = dataPath + "mask.h5"; 
-  String objectPath = "results/aal/to_processing/aal_atlas";
+  String filePath = dataPath + "simple_mask.h5"; 
+  String objectPath = "/home/eb/work/MUNI/PA055/projekt/simple_mask.nii";
   
   int w, h, d;
   MDFloatArray data;
