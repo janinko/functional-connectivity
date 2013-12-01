@@ -89,3 +89,78 @@ class RepreNodes{
   
 }
 
+class VertexList{
+  MLStructure struct;
+ 
+  VertexList() throws IOException{
+    MatFileReader mfr = new MatFileReader(dataPath + "vertexlist.mat");
+    struct = (MLStructure) mfr.getMLArray("V");
+    println("#################");
+    println(struct);
+    println("#################");
+    println(struct.contentToString());
+    println("#################");
+    println(struct.getField("vertexlist", 0));
+    println("#################");
+    println(countVertices(1));
+    println(getVertex(1,1));
+    println(getVertex(1,6940));
+    println(getVertex(1,6795));
+    println(getVertex(1,6940));
+    println("#################");
+    for(MLArray a : struct.getAllFields()){
+      MLDouble list = (MLDouble) a;
+      //println(Arrays.toString(list.getArray())); 
+    }
+  }
+  
+  double[][] getArray(int part){
+    return ((MLDouble)struct.getField("vertexlist", part)).getArray(); 
+  }
+  
+  int countVertices(int part){
+    return ((MLDouble)struct.getField("vertexlist", part)).getArray().length;
+  }
+  
+  double[] getVertex(int part, int index){
+    return getArray(part)[index]; 
+  }
+  
+}
+
+class FaceList{
+  MLStructure struct;
+ 
+  FaceList() throws IOException{
+    MatFileReader mfr = new MatFileReader(dataPath + "facelist.mat");
+    struct = (MLStructure) mfr.getMLArray("F");
+    println("#################");
+    println(struct);
+    println("#################");
+    println(struct.contentToString());
+    println("#################");
+    println(struct.getField("facelist", 0));
+    println("#################");
+    println(countFaces(1));
+    println(getVertex(1,1));
+    println("#################");
+   /* for(MLArray a : struct.getAllFields()){
+      MLDouble list = (MLDouble) a;
+      //println(Arrays.toString(list.getArray())); 
+    }*/
+  }
+  
+  double[][] getArray(int part){
+    return ((MLDouble)struct.getField("facelist", part)).getArray(); 
+  }
+  
+  int countFaces(int part){
+    return ((MLDouble)struct.getField("facelist", part)).getArray().length;
+  }
+  
+  double[] getVertex(int part, int index){
+    return getArray(part)[index]; 
+  }
+  
+}
+
