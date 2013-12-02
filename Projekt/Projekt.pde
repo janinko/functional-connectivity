@@ -2,7 +2,7 @@ import java.util.*;
 import processing.opengl.*;
 import igeo.*;
 
-String dataPath = "/home/janinko/Programování/functional-connectivity/data/";
+String dataPath = "/home/jbrazdil/Programování/functional-connectivity/data/";
 int barWidth = 20;
 int lastBar = -1;
 
@@ -17,6 +17,7 @@ float angle = 0;
 void setup() 
 {
   size(1200, 900, IG.GL); 
+  IG.gridPane(1,0);
   try{
     vl = new VertexList();
     fl = new FaceList();
@@ -54,7 +55,8 @@ void setup()
   new IMesh(fs).clr(1.,0,0);*/
   BrainOBJ b = new BrainOBJ();
   for(int i=0; i<90; i++){
-    b.getPart(i).hsb(i/90.0,1.0,0.9);
+    b.getPart(i).hsb(((double)i)/90.0, 1.0, 0.9, 1.0);
+    println("part " + i + ": " + b.getPart(i).alpha());
   }
   
   /*
