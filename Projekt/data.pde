@@ -164,3 +164,16 @@ class FaceList{
   
 }
 
+class BrainOBJ{
+  
+  BrainOBJ(){
+    
+    
+  }
+  
+  IMesh getPart(int id){
+    IG.open(dataPath + "parts/part_" + id + ".obj");
+    return IG.meshes()[0];
+  }
+}
+

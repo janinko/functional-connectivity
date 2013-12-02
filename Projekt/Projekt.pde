@@ -16,10 +16,7 @@ float angle = 0;
 
 void setup() 
 {
-  size(800, 500, IG.GL); 
-  noStroke();
-  background(0);
-  frameRate(2);
+  size(1200, 900, IG.GL); 
   try{
     vl = new VertexList();
     fl = new FaceList();
@@ -55,14 +52,19 @@ void setup()
   // mesh 1 (cyan)
   new IMesh(cpts1).clr(0,1.,1.);
   new IMesh(fs).clr(1.,0,0);*/
+  BrainOBJ b = new BrainOBJ();
+  for(int i=0; i<90; i++){
+    b.getPart(i).hsb(i/90.0,1.0,0.9);
+  }
   
+  /*
   println("START");
   t.toMesh(0).clr(1.0,0,0);
   t.toMesh(1).clr(0,1.,0);
   t.toMesh(2).clr(0,0,1.);
   t.toMesh(3).clr(1.,1.,0);
   t.toMesh(4).clr(0,1.,1.);
-  t.toMesh(5).clr(1.,0,1.);
+  t.toMesh(5).clr(1.,0,1.);*/
   println("STOP");
 
   /*for(int i=1; i<=90; i++){
