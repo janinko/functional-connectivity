@@ -53,16 +53,16 @@ public class Parser {
 		System.out.println("ctr: " + cx + " " + cy + " " + cz);
 
 
-		//FileWriter w = new FileWriter(partsPath + "parts.obj");
+		FileWriter w = new FileWriter(partsPath + "parts.obj");
+			BufferedWriter bw = new BufferedWriter(w);
 		vb = 0;
 		for(int i=0; i<90; i++){
-			FileWriter w = new FileWriter(partsPath + "part_" + i + ".obj");
-			BufferedWriter bw = new BufferedWriter(w);
+			//FileWriter w = new FileWriter(partsPath + "part_" + i + ".obj");
 			generateOBJ(bw, "Brain part " + i, vl.getArray(i), fl.getArray(i));
 			vb += vl.getArray(i).length;
+		}
 			bw.flush();
 			bw.close();
-		}
 
 	}
 
@@ -79,9 +79,9 @@ public class Parser {
 		}
 		out.newLine();
 		for(int f=0; f<faces.length; f++){
-			int v1 = (int) faces[f][0];// + vb;
-			int v2 = (int) faces[f][1];// + vb;
-			int v3 = (int) faces[f][2];// + vb;
+			int v1 = (int) faces[f][0] + vb;
+			int v2 = (int) faces[f][1] + vb;
+			int v3 = (int) faces[f][2] + vb;
 			out.write("f " + v1 + " " + v2 + " " + v3);
 			out.newLine();
 		}
