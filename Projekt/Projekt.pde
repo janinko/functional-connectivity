@@ -16,8 +16,13 @@ float angle = 0;
 
 void setup() 
 {
-  size(1200, 900, IG.GL); 
-  IG.gridPane(1,0);
+  size(900, 900, IG.GL);
+  //IG.pers();
+  //IGridPanel grid = ((IGridPanel)IG.cur().panel);
+  //grid.gridPanes[1][0] = new MyPane(grid.gridPanes[1][0]);
+  IG.fill();
+  
+  
   try{
     vl = new VertexList();
     fl = new FaceList();
@@ -55,7 +60,11 @@ void setup()
   new IMesh(fs).clr(1.,0,0);*/
   BrainOBJ b = new BrainOBJ();
   for(int i=0; i<90; i++){
-    b.getPart(i).hsb(((double)i)/90.0, 1.0, 0.9, 1.0);
+    if(i == 10){
+      b.getPart(i).hsb(((double)i)/90.0, 1.0, 0.9, 1.0);
+    }else{
+      b.getPart(i).hsb(((double)i)/90.0, 0.7, 0.4, 0.3);
+    }
     println("part " + i + ": " + b.getPart(i).alpha());
   }
   
@@ -93,4 +102,14 @@ void draw()
     part.draw();
   }
   angle += 0.3;*/
+}
+
+IPane ppane = null;
+void mouseClicked(){
+  if(ppane == null) ppane = IG.perspectivePane();
+  println(mouseX + " x " + mouseY);
+  IView view = ppane.getView();
+  println("yaw: " + view.yaw + "; pitch: " + view.pitch + "; viewDistance  : " + view.viewDistance  );
+  println("pos: " + view.pos);
+  new ICurve(view.pos.x, view.pos.y, view.pos.z, 0, 0, ).clr(1.0,0.0,0.0);
 }
