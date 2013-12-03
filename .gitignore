@@ -1,5 +1,6 @@
 *.obj
 !data/parts/partsd.obj
+!data/parts/parts.obj
 /parser/nbproject/private/
 /parser/build/
 /parser/dist/
