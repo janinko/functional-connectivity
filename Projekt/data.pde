@@ -1,32 +1,5 @@
 import java.util.*;
 
-class Mask{
-  String filePath = dataPath + "simple_mask.h5"; 
-  String objectPath = "/home/eb/work/MUNI/PA055/projekt/simple_mask.nii";
-  
-  int w, h, d;
-  MDFloatArray data;
-    
-  
-  Mask(){
-    println(filePath);
-    IHDF5Reader r = HDF5Factory.openForReading(filePath);
-    
-    data = r.float32().readMDArray(objectPath);
-    System.out.println(data);
-    int[] dimensions = data.dimensions();
-    w = dimensions[0];
-    h = dimensions[1];
-    d = dimensions[2];
-    println("w: " + w + "; h: " + h + "; d: " + d);
-  }
-  
-  float get(int x, int y, int z){
-    return data.get(x, y, z);
-  }
-  
-}
-
 class Position{
   float x, y, z;
   Position(float x, float y, float z){
@@ -67,6 +40,9 @@ class RepreNodes{
   String filePath = dataPath + "repre_nodes.h5"; 
   String objectPath = "../../results/aal/to_processing/nodes_indices";
   
+  float dx = 110.5;
+  float dy = 90.5;
+  float dz = 91.5;
   int w;
   MDFloatArray data;
     
@@ -84,82 +60,7 @@ class RepreNodes{
   }
   
   Position get(int x){
-    return new Position(data.get(0,x),data.get(1,x),data.get(2,x));
-  }
-  
-}
-
-class VertexList{
-  MLStructure struct;
- 
-  VertexList() throws IOException{
-    MatFileReader mfr = new MatFileReader(dataPath + "vertexlist.mat");
-    struct = (MLStructure) mfr.getMLArray("V");
-    println("#################");
-    println(struct);
-    println("#################");
-    println(struct.contentToString());
-    println("#################");
-    println(struct.getField("vertexlist", 0));
-    println("#################");
-    println(countVertices(1));
-    println(getVertex(1,1));
-    println(getVertex(1,6940));
-    println(getVertex(1,6795));
-    println(getVertex(1,6940));
-    println("#################");
-    for(MLArray a : struct.getAllFields()){
-      MLDouble list = (MLDouble) a;
-      //println(Arrays.toString(list.getArray())); 
-    }
-  }
-  
-  double[][] getArray(int part){
-    return ((MLDouble)struct.getField("vertexlist", part)).getArray(); 
-  }
-  
-  int countVertices(int part){
-    return ((MLDouble)struct.getField("vertexlist", part)).getArray().length;
-  }
-  
-  double[] getVertex(int part, int index){
-    return getArray(part)[index]; 
-  }
-  
-}
-
-class FaceList{
-  MLStructure struct;
- 
-  FaceList() throws IOException{
-    MatFileReader mfr = new MatFileReader(dataPath + "facelist.mat");
-    struct = (MLStructure) mfr.getMLArray("F");
-    println("#################");
-    println(struct);
-    println("#################");
-    println(struct.contentToString());
-    println("#################");
-    println(struct.getField("facelist", 0));
-    println("#################");
-    println(countFaces(1));
-    println(getVertex(1,1));
-    println("#################");
-   /* for(MLArray a : struct.getAllFields()){
-      MLDouble list = (MLDouble) a;
-      //println(Arrays.toString(list.getArray())); 
-    }*/
-  }
-  
-  double[][] getArray(int part){
-    return ((MLDouble)struct.getField("facelist", part)).getArray(); 
-  }
-  
-  int countFaces(int part){
-    return ((MLDouble)struct.getField("facelist", part)).getArray().length;
-  }
-  
-  double[] getVertex(int part, int index){
-    return getArray(part)[index]; 
+    return new Position(data.get(1,x) -dx, data.get(0,x) -dy,data.get(2,x) -dz);
   }
   
 }
@@ -167,11 +68,16 @@ class FaceList{
 class BrainOBJ{
   
   BrainOBJ(){
-    IG.open(dataPath + "parts/partsd.obj");
+    //IG.open(dataPath + "parts/partsd.obj");
     
   }
   
   IMesh getPart(int id){
+    return IG.meshes()[id];
+  }
+  
+  IMesh getOnePart(int id){
+    IG.open(dataPath + "parts/part_"+id+".obj");
     return IG.meshes()[id];
   }
 }

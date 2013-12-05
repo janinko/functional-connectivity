@@ -6,110 +6,95 @@ String dataPath = "/home/jbrazdil/Programování/functional-connectivity/data/";
 int barWidth = 20;
 int lastBar = -1;
 
-Mask m = new Mask();
 Adjectance a = new Adjectance();
 RepreNodes rn = new RepreNodes();
-VertexList vl;
-FaceList fl;
 List<BrainPart> parts = new ArrayList<BrainPart>();
 float angle = 0;
+IPane persp;
 
-void setup() 
-{
+void setup(){
   size(900, 900, IG.GL);
-  //IG.pers();
+  persp = IG.perspectivePane();
   //IGridPanel grid = ((IGridPanel)IG.cur().panel);
   //grid.gridPanes[1][0] = new MyPane(grid.gridPanes[1][0]);
   IG.fill();
   
   
-  try{
-    vl = new VertexList();
-    fl = new FaceList();
-  }catch(IOException ex){
-    throw new RuntimeException(ex);
-  }
-  Transform t = new Transform(vl, fl);
-  t.setCallback(new LogCallback());
-  
-  IVec[][] cpts1 = new IVec[2][2];
-/*
-  for(int i=0; i < cpts1.length; i++){
-    for(int j=0; j < cpts1[i].length; j++){
-      if( (i+j)%2==0 ){ 
-        cpts1[i][j] = new IVec(i*5, -j*5-30, (i+j)*2); 
-      }
-      else{ cpts1[i][j] = new IVec(i*5, -j*5-30, (i+j-1)*2); }
-    }
-  }
-  for(IVec[] v : cpts1){
-    println(v);
-  }*/
-  /*cpts1[0][0] = new IVec(0, -30, 0);
-  cpts1[0][1] = new IVec(0, -35, 0);
-  cpts1[1][0] = new IVec(5, -30, 0);
-  cpts1[1][1] = new IVec(5, -35, 4);
-  
-  IVertex v1 = new IVertex(0, 0, 0);
-  IVertex v2 = new IVertex(0, -35, 0);
-  IVertex v3 = new IVertex(5, -30, 0);
-  IFace[] fs = new IFace[1];
-  fs[0] = new IFace(v1, v2, v3);
-  // mesh 1 (cyan)
-  new IMesh(cpts1).clr(0,1.,1.);
-  new IMesh(fs).clr(1.,0,0);*/
-  BrainOBJ b = new BrainOBJ();
-  for(int i=0; i<90; i++){
-    if(i == 10){
-      b.getPart(i).hsb(((double)i)/90.0, 1.0, 0.9, 1.0);
-    }else{
-      b.getPart(i).hsb(((double)i)/90.0, 0.7, 0.4, 0.3);
-    }
-    println("part " + i + ": " + b.getPart(i).alpha());
-  }
-  
-  /*
-  println("START");
-  t.toMesh(0).clr(1.0,0,0);
-  t.toMesh(1).clr(0,1.,0);
-  t.toMesh(2).clr(0,0,1.);
-  t.toMesh(3).clr(1.,1.,0);
-  t.toMesh(4).clr(0,1.,1.);
-  t.toMesh(5).clr(1.,0,1.);*/
-  println("STOP");
-
-  /*for(int i=1; i<=90; i++){
-    parts.add(new BrainPart(i, m, rn));
-  }*/
+  textAlign(CENTER);
 }
 
-void draw() 
-{
-  /*colorMode(RGB);
-  background(0);
-  
-  colorMode(HSB, 90);
-  translate(width/2, height/2, 0);
-  rotateY(angle);
-  
-  
-  fill(0, 0, 90);
-  box(5);
-  scale(2);
-  translate(-m.w/2, m.h/2, m.d/2);
-  
-  for(BrainPart part : parts){
-    part.draw();
+int fc=0;
+void draw(){
+  switch(fc){
+    case 0:
+        fill(0);
+        textSize(26);
+        text("LOADING", width/2, height/ 2);
+        fc++; return;
+    case 91: genRepreNodes(); fc++; return;
   }
-  angle += 0.3;*/
+  if(fc > 0 && fc <= 90){
+    genPart(fc-1);
+    fc++; 
+  }
+  
+}
+
+float mouseDist(double x, double y){
+  return dist(mouseX, mouseY, (float) x, (float) y);
+}
+
+double partDist(BrainPart part, IView v){
+  return v.pos.dist(part.getRepreNodeCenter());
 }
 
 IPane ppane = null;
 void mouseClicked(){
-  if(ppane == null) ppane = IG.perspectivePane();
-  println(mouseX + " x " + mouseY);
-  IView view = ppane.getView();
-  println("yaw: " + view.yaw + "; pitch: " + view.pitch + "; viewDistance  : " + view.viewDistance  );
-  println("pos: " + view.pos);
-  new ICurve(view.pos.x, view.pos.y, view.pos.z, 0, 0, ).clr(1.0,0.0,0.0);
+  if(fc < 92) return; // scene is not loaded
+  
+  List<BrainPart> nearParts = new ArrayList<BrainPart>();
+  
+  IView v = persp.getView();
+  for(BrainPart part : parts){
+    IVec coor = v.convert(part.getRepreNodeCenter());
+    float dist = mouseDist(coor.x, coor.y);
+    if(dist < 20){
+      nearParts.add(part);
+    }
+  }
+  if(nearParts.isEmpty()) return;
+  BrainPart nearPart = nearParts.get(0);
+  if(nearParts.size() > 1){
+    double min = partDist(nearPart, v);
+    for(BrainPart part : nearParts){
+      if(min > partDist(part, v)){
+        nearPart = part;
+        min = partDist(part, v);
+      }
+    }
+  }
+  nearPart.onClicked();
+}
+
+BrainOBJ b = new BrainOBJ();
+void genParts(){
+  for(int i=0; i<90; i++){
+    IMesh mesh = b.getOnePart(i);
+    mesh.hsb(((double)i)/90.0, 0.7, 0.4, 0.1);
+    parts.add(new BrainPart(i+1, mesh, rn));
+  }
+}
+
+void genPart(int id){
+  IMesh mesh = b.getOnePart(id);
+  mesh.hsb(((double)id)/90.0, 0.7, 0.4, 0.1);
+  parts.add(new BrainPart(id+1, mesh, rn));
+}
+
+void genRepreNodes(){
+  
+  for(BrainPart part : parts){
+    part.genRepreNode();
+  }
+  
 }
