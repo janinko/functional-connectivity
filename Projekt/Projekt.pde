@@ -1,60 +1,22 @@
 import java.util.*;
 import processing.opengl.*;
 import igeo.*;
-import saito.objloader.*;
 
 String dataPath = "/home/janinko/Programování/functional-connectivity/data/";
-int barWidth = 20;
-int lastBar = -1;
 
 Adjectance a = new Adjectance();
 RepreNodes rn = new RepreNodes();
+BrainInfo bi = new BrainInfo();
 List<BrainPart> parts = new ArrayList<BrainPart>();
 Set<Connectivity> connections; 
-float angle = 0;
 IPane persp;
 
 void setup(){
   size(900, 900, IG.GL);
   persp = IG.perspectivePane();
-  //IGridPanel grid = ((IGridPanel)IG.cur().panel);
-  //grid.gridPanes[1][0] = new MyPane(grid.gridPanes[1][0]);
   IG.fill();
   
-  
   textAlign(CENTER);
-}
-
-OBJModel model;
-BoundingBox bbox;
-void setupobj(){
-  size(900, 900, OPENGL);
-  model = new OBJModel(this, dataPath + "parts/parts_0m.obj", QUADS);
-  model.enableDebug();
- 
-  model.scale(0.4);
-  model.translateToCenter();
-  bbox = new BoundingBox(this, model);
-}
-
-void drawobj(){
-  background(128);
-  lights();
-  translate(width/2, height/2, 0);
-  rotateY(radians(frameCount)/2);
-  
-  for(int i = -1; i < 2; i ++){
-    pushMatrix();
-    translate(0,0,i*bbox.getWHD().z);
-    
-    model.draw();
-    popMatrix();
-  }
-  
-  noFill();
-  stroke(255,0,255);
-  bbox.draw();
-  noStroke();
 }
 
 int fc=0;
@@ -66,16 +28,15 @@ void draw(){
         textSize(26);
         text("LOADING", width/2, height/ 2);
         fc++; return;
-    case 1: genParts(); fc++; return;
-    case 2: connections = Connectivity.generate(a, parts); fc++; return;
-    case 3: genRepreNodes(); fc++; return;
-    case 4: genEdges(); fc++; return;
-    case 5: loaded = true; fc++; return;
+    case 91: connections = Connectivity.generate(a, parts); fc++; return;
+    case 92: genRepreNodes(); fc++; return;
+    case 93: genEdges(); fc++; return;
+    case 94: loaded = true; fc++; return;
   }
-  /*if(fc > 0 && fc <= 90){
+  if(fc > 0 && fc <= 90){
     genPart(fc-1);
     fc++; 
-  }*/
+  }
   
 }
 
@@ -95,12 +56,17 @@ void mouseClicked(){
   
   IView v = persp.getView();
   for(BrainPart part : parts){
+    part.deselected();
     IVec coor = v.convert(part.getRepreNodeCenter());
     float dist = mouseDist(coor.x, coor.y);
     if(dist < 20){
       nearParts.add(part);
     }
   }
+  for(Connectivity conn : connections){
+    conn.deselected();
+  }
+  
   if(nearParts.isEmpty()) return;
   BrainPart nearPart = nearParts.get(0);
   if(nearParts.size() > 1){
@@ -116,19 +82,10 @@ void mouseClicked(){
 }
 
 BrainOBJ b = new BrainOBJ();
-void genParts(){
-BrainOBJ b = new BrainOBJ();
-  for(int i=0; i<90; i++){
-    IMesh mesh = b.getPart(i);
-    mesh.hsb(((double)i)/90.0, 0.7, 0.4, 0.1);
-    parts.add(new BrainPart(i+1, mesh, rn));
-  }
-}
 
 void genPart(int id){
   IMesh mesh = b.getOnePart(id);
-  mesh.hsb(((double)id)/90.0, 0.7, 0.4, 0.1);
-  parts.add(new BrainPart(id+1, mesh, rn));
+  parts.add(new BrainPart(id+1, mesh, rn, bi));
 }
 
 void genRepreNodes(){

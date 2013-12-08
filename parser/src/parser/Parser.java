@@ -10,7 +10,7 @@ import java.io.IOException;
  * @author janinko
  */
 public class Parser {
-	public static final String dataPath = "/home/jbrazdil/Programování/functional-connectivity/data/";
+	public static final String dataPath = "data/";
 	public static final String partsPath = dataPath + "parts/";
 
 	public static int vb;
@@ -93,15 +93,58 @@ public class Parser {
 		}
 		out.newLine();
 		for(int f=0; f<faces.length; f++){
-			int v3 = (int) faces[f][0] + vb;
+			int v1 = (int) faces[f][0] + vb;
 			int v2 = (int) faces[f][1] + vb;
-			int v1 = (int) faces[f][2] + vb;
+			int v3 = (int) faces[f][2] + vb;
 			out.write("f " + v1 + " " + v2 + " " + v3);
 			out.newLine();
 		}
 		out.newLine();
 	}
 
+
+	private static void generateOBJScaled(BufferedWriter out, String name, double[][] vertices, double[][] faces, double scale) throws IOException {
+		System.out.println("Generating part of " + vertices.length + " vertices and " + faces.length + " faces");
+		out.write("o " + name);
+		out.newLine();
+
+
+		double minx = 99999;
+		double miny = 99999;
+		double minz = 99999;
+		double maxx = -99999;
+		double maxy = -99999;
+		double maxz = -99999;
+		for(double[] v : vertices){
+			if(v[0] < minx) minx = v[0];
+			if(v[1] < miny) miny = v[1];
+			if(v[2] < minz) minz = v[2];
+			if(v[0] > maxx) maxx = v[0];
+			if(v[1] > maxy) maxy = v[1];
+			if(v[2] > maxz) maxz = v[2];
+		}
+		double lcx = (minx + maxx) / 2;
+		double lcy = (miny + maxy) / 2;
+		double lcz = (minz + maxz) / 2;
+
+
+		for(int v=0; v<vertices.length; v++){
+			double x = (vertices[v][0] - lcx)*scale + lcx - cx;
+			double y = (vertices[v][1] - lcy)*scale + lcy - cy;
+			double z = (vertices[v][2] - lcz)*scale + lcz - cz;
+			out.write("v " + x + " " + y + " " + z);
+			out.newLine();
+		}
+		out.newLine();
+		for(int f=0; f<faces.length; f++){
+			int v1 = (int) faces[f][0] + vb;
+			int v2 = (int) faces[f][1] + vb;
+			int v3 = (int) faces[f][2] + vb;
+			out.write("f " + v1 + " " + v2 + " " + v3);
+			out.newLine();
+		}
+		out.newLine();
+	}
 
 }
 

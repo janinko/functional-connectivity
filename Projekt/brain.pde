@@ -1,27 +1,46 @@
 
 class BrainPart {
   int partId;
-  IMesh mesh;
   Position pos;
+  HashSet<Connectivity> connections = new HashSet<Connectivity>();
+  String info;
   
+  double hue;
+  
+  IMesh mesh;
   ISphere rn;
 
-  BrainPart(int partId, IMesh mesh, RepreNodes repreNodes){
+  BrainPart(int partId, IMesh mesh, RepreNodes repreNodes, BrainInfo bi){
     this.partId = partId; 
-    this.mesh = mesh;
+    hue = ((double)(partId-1))/90.0;
     pos = repreNodes.get(partId-1);
+    info = bi.get(partId-1);
+    this.mesh = mesh;
+    mesh.hsb(hue, 0.7, 0.4, 0.1);
   }
   
   void genRepreNode(){
-    rn = new ISphere(pos.x, pos.y, pos.z, 3).hsb(((double)(partId-1))/90.0, 0.7, 0.4, 0.8);
+    rn = new ISphere(pos.x, pos.y, pos.z, 3).hsb(hue, 0.3, 0.3, 1);
   }
   
   void onClicked(){
-    mesh.hsb(((double)(partId-1))/90.0, 0.7, 0.4, 0.8);
+    rn.hsb(hue, 0.7, 0.4, 1);
+    for(Connectivity conn : connections){
+      conn.selected();
+      conn.p1.mesh.hsb(hue, 0.7, 0.4, 0.3);
+      conn.p2.mesh.hsb(hue, 0.7, 0.4, 0.3);
+    }
+    println("Clicked on: " + info);
+    mesh.hsb(hue, 0.7, 0.4, 0.5);
   }
   
   IVecI getRepreNodeCenter(){
     return rn.center; 
+  }
+  
+  void deselected(){
+    mesh.hsb(hue, 0.7, 0.4, 0.1);
+    rn.hsb(hue, 0.7, 0.4, 1);
   }
 
 }
@@ -29,11 +48,13 @@ class BrainPart {
 
 static class Connectivity{
   BrainPart p1, p2;
-  ICurve edge;
+  ICylinder edge;
  
   Connectivity(BrainPart p1, BrainPart p2){
     this.p1 = p1;
     this.p2 = p2;
+    p1.connections.add(this);
+    p2.connections.add(this);
   }
   
   static Set<Connectivity> generate(Adjectance adj, List<BrainPart> parts){
@@ -49,7 +70,15 @@ static class Connectivity{
   }
   
   void genEdge(){
-    edge = new ICurve(p1.getRepreNodeCenter(), p2.getRepreNodeCenter());
-    edge.clr(0.7, 0.1, 0.1, 0.7);
+    edge = new ICylinder(p1.getRepreNodeCenter(), p2.getRepreNodeCenter(), 0.8);
+    edge.hsb(0.5, 0.2, 0.2, 0.3);
+  }
+  
+  void selected(){
+    edge.hsb(0.5, 0.3, 0.4, 1);
+  }
+  
+  void deselected(){
+    edge.hsb(0.5, 0.3, 0.4, 0.3);
   }
 }

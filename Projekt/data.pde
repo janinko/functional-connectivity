@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 
 class Position{
   float x, y, z;
@@ -67,18 +68,30 @@ class RepreNodes{
 
 class BrainOBJ{
   
-  BrainOBJ(){
-    IG.open(dataPath + "parts/partsd.obj");
-    
-  }
-  
-  IMesh getPart(int id){
-    return IG.meshes()[id];
-  }
-  
   IMesh getOnePart(int id){
-    IG.open(dataPath + "parts/part_"+id+".obj");
+    IG.open(dataPath + "parts/part_"+id+"d.obj");
     return IG.meshes()[id];
   }
 }
 
+class BrainInfo{
+  String filePath = dataPath + "aal.txt"; 
+  List<String> data = new ArrayList<String>();
+  
+  BrainInfo(){
+    try{
+      BufferedReader in = new BufferedReader(new FileReader(filePath));
+      String line = in.readLine();
+      while(line != null){
+        data.add(line);
+        line = in.readLine();
+      }
+    }catch(IOException ex){
+      throw new RuntimeException(ex);
+    }
+  }
+  
+  String get(int index){
+    return data.get(index);
+  }
+}
