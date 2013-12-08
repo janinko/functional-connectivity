@@ -68,7 +68,7 @@ class RepreNodes{
 class BrainOBJ{
   
   BrainOBJ(){
-    //IG.open(dataPath + "parts/partsd.obj");
+    IG.open(dataPath + "parts/partsd.obj");
     
   }
   

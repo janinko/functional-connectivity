@@ -1,14 +1,16 @@
 import java.util.*;
 import processing.opengl.*;
 import igeo.*;
+import saito.objloader.*;
 
-String dataPath = "/home/jbrazdil/Programování/functional-connectivity/data/";
+String dataPath = "/home/janinko/Programování/functional-connectivity/data/";
 int barWidth = 20;
 int lastBar = -1;
 
 Adjectance a = new Adjectance();
 RepreNodes rn = new RepreNodes();
 List<BrainPart> parts = new ArrayList<BrainPart>();
+Set<Connectivity> connections; 
 float angle = 0;
 IPane persp;
 
@@ -23,7 +25,40 @@ void setup(){
   textAlign(CENTER);
 }
 
+OBJModel model;
+BoundingBox bbox;
+void setupobj(){
+  size(900, 900, OPENGL);
+  model = new OBJModel(this, dataPath + "parts/parts_0m.obj", QUADS);
+  model.enableDebug();
+ 
+  model.scale(0.4);
+  model.translateToCenter();
+  bbox = new BoundingBox(this, model);
+}
+
+void drawobj(){
+  background(128);
+  lights();
+  translate(width/2, height/2, 0);
+  rotateY(radians(frameCount)/2);
+  
+  for(int i = -1; i < 2; i ++){
+    pushMatrix();
+    translate(0,0,i*bbox.getWHD().z);
+    
+    model.draw();
+    popMatrix();
+  }
+  
+  noFill();
+  stroke(255,0,255);
+  bbox.draw();
+  noStroke();
+}
+
 int fc=0;
+boolean loaded = false;
 void draw(){
   switch(fc){
     case 0:
@@ -31,12 +66,16 @@ void draw(){
         textSize(26);
         text("LOADING", width/2, height/ 2);
         fc++; return;
-    case 91: genRepreNodes(); fc++; return;
+    case 1: genParts(); fc++; return;
+    case 2: connections = Connectivity.generate(a, parts); fc++; return;
+    case 3: genRepreNodes(); fc++; return;
+    case 4: genEdges(); fc++; return;
+    case 5: loaded = true; fc++; return;
   }
-  if(fc > 0 && fc <= 90){
+  /*if(fc > 0 && fc <= 90){
     genPart(fc-1);
     fc++; 
-  }
+  }*/
   
 }
 
@@ -50,7 +89,7 @@ double partDist(BrainPart part, IView v){
 
 IPane ppane = null;
 void mouseClicked(){
-  if(fc < 92) return; // scene is not loaded
+  if(!loaded) return; // scene is not loaded
   
   List<BrainPart> nearParts = new ArrayList<BrainPart>();
   
@@ -78,8 +117,9 @@ void mouseClicked(){
 
 BrainOBJ b = new BrainOBJ();
 void genParts(){
+BrainOBJ b = new BrainOBJ();
   for(int i=0; i<90; i++){
-    IMesh mesh = b.getOnePart(i);
+    IMesh mesh = b.getPart(i);
     mesh.hsb(((double)i)/90.0, 0.7, 0.4, 0.1);
     parts.add(new BrainPart(i+1, mesh, rn));
   }
@@ -92,9 +132,13 @@ void genPart(int id){
 }
 
 void genRepreNodes(){
-  
   for(BrainPart part : parts){
     part.genRepreNode();
   }
-  
+}
+
+void genEdges(){
+  for(Connectivity conn : connections){
+    conn.genEdge();
+  }
 }
