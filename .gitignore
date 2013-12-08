@@ -1,4 +1,5 @@
 *.obj
+*.mtl
 !data/parts/partsd.obj
 !data/parts/parts.obj
 /parser/nbproject/private/
