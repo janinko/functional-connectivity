@@ -16,16 +16,17 @@ void setup(){
   persp = IG.perspectivePane();
   IG.fill();
   
-  textAlign(CENTER);
 }
 
 int fc=0;
 boolean loaded = false;
+BrainPart selected = null;
 void draw(){
   switch(fc){
     case 0:
         fill(0);
         textSize(26);
+        textAlign(CENTER);
         text("LOADING", width/2, height/ 2);
         fc++; return;
     case 91: connections = Connectivity.generate(a, parts); fc++; return;
@@ -37,7 +38,13 @@ void draw(){
     genPart(fc-1);
     fc++; 
   }
-  
+  if(selected != null){
+    fill(0);
+    textSize(15);
+    textAlign(LEFT);
+    text(selected.info, 20, 20);
+    return;
+  }
 }
 
 float mouseDist(double x, double y){
@@ -51,6 +58,7 @@ double partDist(BrainPart part, IView v){
 IPane ppane = null;
 void mouseClicked(){
   if(!loaded) return; // scene is not loaded
+  selected = null;
   
   List<BrainPart> nearParts = new ArrayList<BrainPart>();
   
@@ -79,6 +87,7 @@ void mouseClicked(){
     }
   }
   nearPart.onClicked();
+  selected = nearPart;
 }
 
 BrainOBJ b = new BrainOBJ();

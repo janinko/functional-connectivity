@@ -24,14 +24,14 @@ class BrainPart {
   }
   
   void onClicked(){
-    rn.hsb(hue, 0.7, 0.4, 1);
     for(Connectivity conn : connections){
       conn.selected();
-      conn.p1.mesh.hsb(hue, 0.7, 0.4, 0.3);
-      conn.p2.mesh.hsb(hue, 0.7, 0.4, 0.3);
+      conn.p1.mesh.hsb(conn.p1.hue, 0.7, 0.4, 0.4);
+      conn.p2.mesh.hsb(conn.p1.hue, 0.7, 0.4, 0.4);
     }
     println("Clicked on: " + info);
-    mesh.hsb(hue, 0.7, 0.4, 0.5);
+    rn.hsb(hue, 0.9, 0.5, 1);
+    mesh.hsb(hue, 0.7, 0.4, 0.6);
   }
   
   IVecI getRepreNodeCenter(){
@@ -40,7 +40,7 @@ class BrainPart {
   
   void deselected(){
     mesh.hsb(hue, 0.7, 0.4, 0.1);
-    rn.hsb(hue, 0.7, 0.4, 1);
+    rn.hsb(hue, 0.3, 0.3, 1);
   }
 
 }
@@ -71,14 +71,14 @@ static class Connectivity{
   
   void genEdge(){
     edge = new ICylinder(p1.getRepreNodeCenter(), p2.getRepreNodeCenter(), 0.8);
-    edge.hsb(0.5, 0.2, 0.2, 0.3);
+    edge.hsb(0, 0.0, 0.2, 0.3);
   }
   
   void selected(){
-    edge.hsb(0.5, 0.3, 0.4, 1);
+    edge.hsb(1, 0.8, 1, 1);
   }
   
   void deselected(){
-    edge.hsb(0.5, 0.3, 0.4, 0.3);
+    edge.hsb(0, 0.0, 0.2, 0.3);
   }
 }
