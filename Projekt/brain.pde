@@ -26,12 +26,12 @@ class BrainPart {
   void onClicked(){
     for(Connectivity conn : connections){
       conn.selected();
-      conn.p1.mesh.hsb(conn.p1.hue, 0.7, 0.4, 0.4);
-      conn.p2.mesh.hsb(conn.p1.hue, 0.7, 0.4, 0.4);
+      conn.p1.mesh.hsb(conn.p1.hue, 0.7, 0.4, 0.6);
+      conn.p2.mesh.hsb(conn.p2.hue, 0.7, 0.4, 0.6);
     }
     println("Clicked on: " + info);
     rn.hsb(hue, 0.9, 0.5, 1);
-    mesh.hsb(hue, 0.7, 0.4, 0.6);
+    mesh.hsb(hue, 0.7, 0.4, 0.9);
   }
   
   IVecI getRepreNodeCenter(){
