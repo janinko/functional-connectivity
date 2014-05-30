@@ -13,8 +13,8 @@ import java.io.IOException;
 class VertexList {
 	MLStructure struct;
 
-	VertexList() throws IOException {
-		MatFileReader mfr = new MatFileReader(Parser.dataPath + "vertexlist.mat");
+	VertexList(String dataPath) throws IOException {
+		MatFileReader mfr = new MatFileReader(dataPath + "vertexlist.mat");
 		struct = (MLStructure) mfr.getMLArray("V");
 		System.out.println("#################");
 		System.out.println(struct);

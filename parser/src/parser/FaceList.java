@@ -12,8 +12,8 @@ import java.io.IOException;
 class FaceList {
 	MLStructure struct;
 
-	FaceList() throws IOException {
-		MatFileReader mfr = new MatFileReader(Parser.dataPath + "facelist.mat");
+	FaceList(String dataPath) throws IOException {
+		MatFileReader mfr = new MatFileReader(dataPath + "facelist.mat");
 		struct = (MLStructure) mfr.getMLArray("F");
 		System.out.println("#################");
 		System.out.println(struct);

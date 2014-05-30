@@ -21,8 +21,8 @@ public class Parser {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) throws IOException {
-		FaceList fl = new FaceList();
-		VertexList vl = new VertexList();
+		FaceList fl = new FaceList(dataPath);
+		VertexList vl = new VertexList(dataPath);
 
 		File parts = new File(partsPath);
 		parts.mkdir();
