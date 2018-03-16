@@ -10,8 +10,8 @@ import java.io.IOException;
  * @author janinko
  */
 public class Parser {
-	public static final String dataPath = "data/";
-	public static final String partsPath = dataPath + "parts/";
+	public static final String dataPath = "/home/jbrazdil/Programování/functional-connectivity/data/";
+	public static final String partsPath = dataPath + "brain/";
 
 	public static int vb;
 	public static double cx;
@@ -35,7 +35,7 @@ public class Parser {
 		double maxz = -99999;
 
 
-		for(int i=0; i<90; i++){
+		for(int i=0; i<1; i++){
 			for(double[] v : vl.getArray(i)){
 				if(v[0] < minx) minx = v[0];
 				if(v[1] < miny) miny = v[1];
@@ -60,7 +60,7 @@ public class Parser {
 		FileWriter w = new FileWriter(partsPath + "parts.obj");
 		BufferedWriter bw = new BufferedWriter(w);
 		vb = 0;
-		for(int i=0; i<90; i++){
+		for(int i=0; i<1; i++){
 			generateOBJ(bw, "Brain part " + i, vl.getArray(i), fl.getArray(i));
 			vb += vl.getArray(i).length;
 		}
@@ -70,7 +70,7 @@ public class Parser {
 	
 	private static void genAll(VertexList vl, FaceList fl) throws IOException{
 		vb = 0;
-		for(int i=0; i<90; i++){
+		for(int i=0; i<1; i++){
 			FileWriter w = new FileWriter(partsPath + "part_" + i + ".obj");
 			BufferedWriter bw = new BufferedWriter(w);
 			generateOBJ(bw, "Brain part " + i, vl.getArray(i), fl.getArray(i));

@@ -11,17 +11,16 @@ import java.io.IOException;
  * @author janinko
  */
 class VertexList {
-	MLStructure struct;
+	MatFileReader mfr;
 
 	VertexList() throws IOException {
-		MatFileReader mfr = new MatFileReader(Parser.dataPath + "vertexlist.mat");
-		struct = (MLStructure) mfr.getMLArray("V");
+		mfr = new MatFileReader(Parser.dataPath + "vertexlist_brain.mat");
 		System.out.println("#################");
-		System.out.println(struct);
+		System.out.println(mfr);
 		System.out.println("#################");
-		System.out.println(struct.contentToString());
+		System.out.println(mfr.getContent());
 		System.out.println("#################");
-		System.out.println(struct.getField("vertexlist", 0));
+		System.out.println(mfr.getMLArray("vertexlist"));
 		System.out.println("#################");
 		System.out.println(countVertices(1));
 		System.out.println(getVertex(1, 1));
@@ -29,18 +28,15 @@ class VertexList {
 		System.out.println(getVertex(1, 6795));
 		System.out.println(getVertex(1, 6940));
 		System.out.println("#################");
-		for (MLArray a : struct.getAllFields()) {
-			MLDouble list = (MLDouble) a;
-			//System.out.println(Arrays.toString(list.getArray()));
-		}
+		
 	}
 
 	double[][] getArray(int part) {
-		return ((MLDouble) struct.getField("vertexlist", part)).getArray();
+		return ((MLDouble) mfr.getMLArray("vertexlist")).getArray();
 	}
 
 	int countVertices(int part) {
-		return ((MLDouble) struct.getField("vertexlist", part)).getArray().length;
+		return ((MLDouble) mfr.getMLArray("vertexlist")).getArray().length;
 	}
 
 	double[] getVertex(int part, int index) {

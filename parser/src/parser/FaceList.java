@@ -2,6 +2,7 @@
 package parser;
 
 import com.jmatio.io.MatFileReader;
+import com.jmatio.types.MLArray;
 import com.jmatio.types.MLDouble;
 import com.jmatio.types.MLStructure;
 import java.io.IOException;
@@ -10,17 +11,18 @@ import java.io.IOException;
  * @author janinko
  */
 class FaceList {
-	MLStructure struct;
+	MatFileReader mfr;
 
 	FaceList() throws IOException {
-		MatFileReader mfr = new MatFileReader(Parser.dataPath + "facelist.mat");
-		struct = (MLStructure) mfr.getMLArray("F");
+		mfr = new MatFileReader(Parser.dataPath + "facelist_brain.mat");
+		System.out.println(mfr.getContent());
+		
 		System.out.println("#################");
-		System.out.println(struct);
+		System.out.println(mfr);
 		System.out.println("#################");
-		System.out.println(struct.contentToString());
+		System.out.println(mfr.getMLArray("facelist"));
 		System.out.println("#################");
-		System.out.println(struct.getField("facelist", 0));
+		//System.out.println(struct.getField("facelist", 0));
 		System.out.println("#################");
 		System.out.println(countFaces(1));
 		System.out.println(getVertex(1, 1));
@@ -32,11 +34,11 @@ class FaceList {
 	}
 
 	double[][] getArray(int part) {
-		return ((MLDouble) struct.getField("facelist", part)).getArray();
+		return ((MLDouble) mfr.getMLArray("facelist")).getArray();
 	}
 
 	int countFaces(int part) {
-		return ((MLDouble) struct.getField("facelist", part)).getArray().length;
+		return ((MLDouble) mfr.getMLArray("facelist")).getArray().length;
 	}
 
 	double[] getVertex(int part, int index) {

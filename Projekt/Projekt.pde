@@ -2,7 +2,7 @@ import java.util.*;
 import processing.opengl.*;
 import igeo.*;
 
-String dataPath = "/home/janinko/Programování/functional-connectivity/data/";
+String dataPath = "/home/jbrazdil/Programování/functional-connectivity/data/";
 
 Adjectance a = new Adjectance();
 RepreNodes rn = new RepreNodes();
@@ -15,12 +15,12 @@ void setup(){
   size(900, 900, IG.GL);
   persp = IG.perspectivePane();
   IG.fill();
-  
 }
 
 int fc=0;
 boolean loaded = false;
 BrainPart selected = null;
+IMesh brain;
 void draw(){
   switch(fc){
     case 0:
@@ -29,15 +29,21 @@ void draw(){
         textAlign(CENTER);
         text("LOADING", width/2, height/ 2);
         fc++; return;
-    case 91: connections = Connectivity.generate(a, parts); fc++; return;
-    case 92: genRepreNodes(); fc++; return;
-    case 93: genEdges(); fc++; return;
-    case 94: loaded = true; fc++; return;
+    case 1:
+      IG.open(dataPath + "brain/part_0d.obj");
+      brain = IG.meshes()[0];
+      brain.hsb(0.1, 0.6, 0.7, 0.1);
+      fc++; return;
+    case 92: connections = Connectivity.generate(a, parts); fc++; return;
+    case 93: genRepreNodes(); fc++; return;
+    case 94: genEdges(); fc++; return;
+    case 95: loaded = true; fc++; return;
   }
-  if(fc > 0 && fc <= 90){
-    genPart(fc-1);
+  if(fc > 1 && fc <= 91){
+    genPart(fc-2);
     fc++; 
   }
+  if(fc > 1) brain.show();
   if(selected != null){
     fill(0);
     textSize(15);

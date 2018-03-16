@@ -17,6 +17,7 @@ class BrainPart {
     info = bi.get(partId-1);
     this.mesh = mesh;
     mesh.hsb(hue, 0.7, 0.4, 0.1);
+    mesh.hide();
   }
   
   void genRepreNode(){
@@ -27,7 +28,9 @@ class BrainPart {
     for(Connectivity conn : connections){
       conn.selected();
       conn.p1.mesh.hsb(conn.p1.hue, 0.7, 0.4, 0.6);
+      conn.p1.mesh.show();
       conn.p2.mesh.hsb(conn.p2.hue, 0.7, 0.4, 0.6);
+      conn.p2.mesh.show();
     }
     println("Clicked on: " + info);
     rn.hsb(hue, 0.9, 0.5, 1);
@@ -39,7 +42,7 @@ class BrainPart {
   }
   
   void deselected(){
-    mesh.hsb(hue, 0.7, 0.4, 0.1);
+    mesh.hide();
     rn.hsb(hue, 0.3, 0.3, 1);
   }
 
